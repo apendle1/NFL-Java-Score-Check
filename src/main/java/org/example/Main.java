@@ -29,9 +29,44 @@ public class Main {
                 String AwayTeamLocation = Competitors.get(1).getAsJsonObject().get("team")
                         .getAsJsonObject().get("location").getAsString();
 
+                //events . status holds game clock information
+
+                JsonObject Status = events.get(i).getAsJsonObject().get("status").getAsJsonObject();
+
+                //type -> id gives a number that shows the state the game is in.
+
+                int StatusTypeID = Status.get("type").getAsJsonObject().get("id").getAsInt();
+
+                //type -> detail gives a nice little game status, ie: "11:37 4TH QUARTER"
+
+                String StatusDetail = Status.get("type").getAsJsonObject().get("detail").getAsString();
+
+                //competitors(array) -> get (i) -> score (String) for total / linescores (array) for all quarters.
+
+                String HomeScore = Competitors.get(0).getAsJsonObject().get("score").getAsString();
+                String AwayScore = Competitors.get(1).getAsJsonObject().get("score").getAsString();
+
                 String HomeTeam = Competitors.get(0).getAsJsonObject().get("team").getAsJsonObject().get("name").getAsString();
                 String AwayTeam = Competitors.get(1).getAsJsonObject().get("team").getAsJsonObject().get("name").getAsString();
-                System.out.println(AwayTeamLocation + " " + AwayTeam + " @ " + HomeTeamLocation + " " + HomeTeam);
+
+                System.out.println(AwayTeamLocation + " " + AwayTeam + " @ " + HomeTeamLocation + " " + HomeTeam + ": " + StatusDetail);
+                if(StatusTypeID > 1){//operates on the understanding that any in progress or finished game has a status id of more than 1
+                    JsonArray HomeLineScore = Competitors.get(0).getAsJsonObject().get("linescores").getAsJsonArray();
+                    JsonArray AwayLineScore = Competitors.get(1).getAsJsonObject().get("linescores").getAsJsonArray();
+
+                    System.out.print(String.format("%10s", HomeTeam) + ": ");
+                    for(int j = 0; j < HomeLineScore.size(); j++){
+                        System.out.print(String.format("%02d" , Integer.parseInt(HomeLineScore.get(j).getAsJsonObject().get("value").getAsString())) + " ");
+                    }
+                    System.out.println(": " + HomeScore);
+
+                    System.out.print(String.format("%10s", AwayTeam) + ": ");
+                    for(int j = 0; j < AwayLineScore.size(); j++){
+                        System.out.print(String.format("%02d" , Integer.parseInt(AwayLineScore.get(j).getAsJsonObject().get("value").getAsString())) + " ");
+                    }
+                    System.out.println(": " + AwayScore);
+                }
+                System.out.println();
             }
 
         }catch(Exception e){
