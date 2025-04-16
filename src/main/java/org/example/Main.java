@@ -10,7 +10,6 @@ import com.google.gson.JsonParser;
 
 public class Main {
     public static void main(String[] args) {
-
         File file = new File(args[0]); //Argument is file location for txt recorded api pull while project is in development.
         //api pull is from https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=1000&dates=2024
         try{
@@ -55,14 +54,23 @@ public class Main {
                     JsonArray AwayLineScore = Competitors.get(1).getAsJsonObject().get("linescores").getAsJsonArray();
 
                     System.out.print(String.format("%10s", HomeTeam) + ": ");
-                    for(int j = 0; j < HomeLineScore.size(); j++){
-                        System.out.print(String.format("%02d" , Integer.parseInt(HomeLineScore.get(j).getAsJsonObject().get("value").getAsString())) + " ");
+                    for(int j = 0; j < 4; j++){ //always show 4 quarters of scoring at any moment during game.
+                        //api will only have one line score for quarter of game played.
+                        if(j < HomeLineScore.size()){
+                            System.out.print(String.format("%02d" , Integer.parseInt(HomeLineScore.get(j).getAsJsonObject().get("value").getAsString())) + " ");
+                        } else {
+                            System.out.print("00 ");
+                        }
                     }
                     System.out.println(": " + HomeScore);
 
                     System.out.print(String.format("%10s", AwayTeam) + ": ");
-                    for(int j = 0; j < AwayLineScore.size(); j++){
-                        System.out.print(String.format("%02d" , Integer.parseInt(AwayLineScore.get(j).getAsJsonObject().get("value").getAsString())) + " ");
+                    for(int j = 0; j < 4; j++){
+                        if(j < AwayLineScore.size()){
+                            System.out.print(String.format("%02d" , Integer.parseInt(AwayLineScore.get(j).getAsJsonObject().get("value").getAsString())) + " ");
+                        } else {
+                            System.out.print("00 ");
+                        }
                     }
                     System.out.println(": " + AwayScore);
                 }
