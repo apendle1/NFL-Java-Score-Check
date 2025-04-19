@@ -52,7 +52,7 @@ public class Main {
                         response.append(line);
                     }
                     reader.close();
-                    System.out.println(response.toString());
+                    System.out.println(response);
                     jsonString = line;
                 } else {
                     System.out.println("Request failed: " + responseCode);
